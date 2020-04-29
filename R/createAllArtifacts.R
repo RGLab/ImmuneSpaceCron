@@ -3,7 +3,7 @@
 #' @import data.table stringr Rlabkey rvest readr
 #' @export
 #'
-CreateAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/"){
+createAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/"){
   library(data.table)
   library(stringr)
   library(Rlabkey)

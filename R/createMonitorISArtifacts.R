@@ -3,11 +3,10 @@
 #' @import data.table stringr
 #' @export
 #'
-createMonitorISArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/"){
-  library(data.table)
-  library(stringr)
+createMonitorISArtifacts <- function(subdir){
+  requireLibs(c("data.table",
+                "stringr"))
 
-  # load logs rds
   logs_dt <- getCurrentRDS("_logs.rds")
 
   #######################################

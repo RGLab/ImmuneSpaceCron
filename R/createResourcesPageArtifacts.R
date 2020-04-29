@@ -14,7 +14,7 @@ createResourcesPageArtifacts <- function(subdir){
   ###        General Setup           ###
   ######################################
   labkey.url.base <- getLabkeyBaseURL()
-  logs_dt <- getCurrentRDS("_logs.rds")
+  logs_dt <- getCurrentRDS(subdir, "_logs.rds")
 
   ######################################
   ###           Tomcat Logs          ###

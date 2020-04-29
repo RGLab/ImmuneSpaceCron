@@ -5,7 +5,6 @@
 #'
 createImmuneSpaceRInitsArtifact <- function(subdir){
   requireLibs(c("data.table"))
-  # load logs rds
   logs_dt <- getCurrentRDS("_logs.rds")
 
   #######################################

@@ -21,9 +21,7 @@ createResourcesPageArtifacts <- function(subdir){
   ######################################
 
   # ImmuneSpaceR connections to a study (without date filtering)
-  ISR <- logs_dt[ grepl("ImmuneSpaceR", X11) & !is.na(X12) ]
-  ISR[, study := ifelse(is.na(study), "All", study) ] # Fix study for project level
-  ISR_inits <- ISR[ , list(cnt = .N), by = .(date2, X12, study) ]
+  ISR_inits <- getCurrentRDS(subdir, "ISR_inits")
   ISR_study <- ISR_inits[ , list(ISR_connections = .N), by = .(study, date2) ]
   ISR_study <- ISR_study[ grepl("SDY", study) ]
 

@@ -4,7 +4,7 @@
 \alias{createMonitorISArtifacts}
 \title{Create artifacts for MonitorIS module report using parsed logs}
 \usage{
-createMonitorISArtifacts(subdir = "/share/files/Studies/R_API_resources/")
+createMonitorISArtifacts(subdir)
 }
 \description{
 Create artifacts for MonitorIS module report using parsed logs

@@ -30,6 +30,7 @@ cleanUp <- function(subdir, filename){
   allFiles <- list.files(subdir)
   targetFiles <- allFiles[ grep(filename, allFiles) ]
   if(length(targetFiles) > 0){
+    targetFiles <- file.path(subdir, targetFiles)
     ret <- sapply(targetFiles, file.remove)
   }
 }

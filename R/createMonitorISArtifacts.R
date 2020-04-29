@@ -7,8 +7,9 @@ createMonitorISArtifacts <- function(subdir){
   requireLibs(c("data.table",
                 "stringr"))
 
-  logs_dt <- getCurrentRDS(subdir, "_logs.rds")
-
+  if(!exists("logs_dt")){
+    logs_dt <- getCurrentRDS(subdir, "_logs.rds")
+  }
 
   #######################################
   ###           log_study             ###

@@ -11,6 +11,8 @@ CreateAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/")
   library(readr)
 
   createParsedLogsArtifact(subdir)
+  logs_dt <- getCurrentRDS(subdir, "_logs.rds")
+
   createImmuneSpaceRInitsArtifact(subdir)
   createPubMedArtifact(subdir)
   createResourcesPageArtifacts(subdir)

@@ -8,7 +8,6 @@ createPubMedArtifact <- function(subdir){
   requireLibs(c("Rlabkey",
                 "data.table"))
 
-
   labkey.url.base <- getLabkeyBaseURL()
 
   ######################################

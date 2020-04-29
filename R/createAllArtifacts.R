@@ -1,0 +1,18 @@
+#' Create all artifacts for use in multiple modules
+#'
+#' @import data.table stringr Rlabkey rvest readr
+#' @export
+#'
+CreateAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/"){
+  library(data.table)
+  library(stringr)
+  library(Rlabkey)
+  library(rvest)
+  library(readr)
+
+  createParsedLogsArtifact(subdir)
+  createImmuneSpaceRInitsArtifact(subdir)
+  createPubMedArtifact(subdir)
+  createResourcesPageArtifacts(subdir)
+  createMonitorISArtifacts(subdir)
+}

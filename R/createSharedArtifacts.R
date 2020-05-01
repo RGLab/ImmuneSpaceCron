@@ -14,7 +14,7 @@ createImmuneSpaceRInitsArtifact <- function(subdir){
   saveAndCleanUp(ISR_inits, subdir, "ISR_inits")
 
 
-  studyViewsInUI <- parseLogsToUIStudyViews(logs_dt, searchString)
+  studyViewsInUI <- parseLogsToUIStudyViews(logs_dt)
   saveAndCleanUp(studyViewsInUI, subdir, "studyViewsInUI")
 }
 

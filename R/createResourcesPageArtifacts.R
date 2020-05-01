@@ -47,7 +47,7 @@ createResourcesPageArtifacts <- function(subdir){
                           colNameOpt = "fieldname",
                           colSelect = c("role_in_study", "study_accession", "person_accession"))
 
-  pi <- mungePIdata(pi, valid$Name)
+  pi <- mungePIData(pi, valid$Name)
 
   # Study Overview
   study <- labkey.selectRows(baseUrl = labkey.url.base,
@@ -75,7 +75,7 @@ createResourcesPageArtifacts <- function(subdir){
 
   at <- mungeAssayTimepointData(at)
 
-  all <- mergeStudymetaData(valid, pi, study, at)
+  all <- mergeStudyMetaData(valid, pi, study, at)
 
   saveAndCleanUp(all, subdir, filename = "sdyMetaData")
 }

@@ -56,6 +56,6 @@ getCurrentRDS <- function(subdir, filename){
 requireLibs <- function(libs){
   libs <- libs[ !libs %in% .packages() ]
   if(length(libs) > 0){
-    library(libs, character.only = TRUE)
+    invisible(lapply(libs, library, character.only = TRUE))
   }
 }

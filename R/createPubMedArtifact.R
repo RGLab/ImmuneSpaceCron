@@ -6,7 +6,8 @@
 #'
 createPubMedArtifact <- function(subdir){
   requireLibs(c("Rlabkey",
-                "data.table"))
+                "data.table",
+                "rvest"))
 
   labkey.url.base <- getLabkeyBaseURL()
 
@@ -14,7 +15,7 @@ createPubMedArtifact <- function(subdir){
   ###        PubMed Citations        ###
   ######################################
 
-  df <- labkey.selectRows(baseUrl = labkey.url.base,
+  sdyPubMedData <- labkey.selectRows(baseUrl = labkey.url.base,
                           folderPath = "/Studies/",
                           schemaName = "immport",
                           queryName = "study_pubmed",
@@ -26,21 +27,10 @@ createPubMedArtifact <- function(subdir){
                                 schemaName = "lists",
                                 queryName = "Studies",
                                 colNameOpt = "fieldname")
-  df <- df[ df$study_accession %in% sdysInIS$name, ]
+  sdyPubMedData <- sdyPubMedData[ sdyPubMedData$study_accession %in% sdysInIS$name, ]
 
-  # For each pubmedid
-  allIds <- getPubMedInfo(df$pubmed_id)
-
-  # Add study
-  allIds$study <- df$study_accession[ match(allIds$original_id, df$pubmed_id) ]
-  allIds$studyNum <- as.numeric(gsub("SDY","", allIds$study))
-
-  # Add date published (as YYYY-MM for sorting)
-  df$datePublished <- paste(df$year, match(df$month, month.abb), sep = "-")
-  allIds$datePublished <- df$datePublished[ match(allIds$study, df$study_accession) ]
-
-  # title - TODO v2 (journal impact score using scopus API)
-  allIds$original_title <- df$title[ match(allIds$original_id, df$pubmed_id) ]
+  allIds <- getPubMedInfo(sdyPubMedData$pubmed_id)
+  allIds <- mungePubMedData(allIds, sdyPubMedData)
 
   saveAndCleanUp(allIds, subdir, filename = "pubmedInfo")
 }
@@ -71,5 +61,17 @@ getPubMedInfo <- function(pubMedIds){
               "citedby_id",
               "original_id")
   setnames(allIds, colnames(allIds), cnames)
+  return(allIds)
+}
+
+mungePubMedData <- function(allIds, sdyPubMedData){
+  allIds$study <- sdyPubMedData$study_accession[ match(allIds$original_id, sdyPubMedData$pubmed_id) ]
+  allIds$studyNum <- as.numeric(gsub("SDY","", allIds$study))
+
+  # Add date published (as YYYY-MM for sorting)
+  sdyPubMedData$datePublished <- paste(sdyPubMedData$year, match(sdyPubMedData$month, month.abb), sep = "-")
+  allIds$datePublished <- sdyPubMedData$datePublished[ match(allIds$study, sdyPubMedData$study_accession) ]
+
+  allIds$original_title <- sdyPubMedData$title[ match(allIds$original_id, sdyPubMedData$pubmed_id) ]
   return(allIds)
 }

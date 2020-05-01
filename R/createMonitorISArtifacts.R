@@ -17,7 +17,7 @@ createMonitorISArtifacts <- function(subdir){
 
   logs.study <- getCurrentRDS(subdir, "studyViewsInUI")
   logs.study <- parseLogs.study(logs.study)
-  saveAndCleanUp(logs.studies, subdir, "log_study")
+  saveAndCleanUp(logs.study, subdir, "log_study")
 
   #######################################
   ###           log_module            ###

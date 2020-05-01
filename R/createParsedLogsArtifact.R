@@ -35,7 +35,8 @@ createParsedLogsArtifact <- function(subdir){
   saveAndCleanUp(logs_dt, subdir, filename = "logs")
 }
 
-# ---- get logs ----
+# -----------------------------------------------------------------------------
+#                            NOTES ON LOG PARSING:
 # To determine how ImmuneSpaceR has been used, we parse the server logs. Since the server logs
 # all types of GET / POSTS and other requests, there is a fair amount of filtering that must
 # be done to find the requests that help us understand usage.
@@ -48,6 +49,7 @@ createParsedLogsArtifact <- function(subdir){
 # Add this line
 # 00 0-23/6 * * * rsync -a -v /labkey/apps/tomcat/logs/localhost_access_log.* /share/tomcat-logs/
 # This will sync logs to `/share/tomcat-logs/` every six hour.
+
 parseDailyLog <- function(date, exclusionEmails) {
 
   if (Sys.info()["nodename"] == "ImmuneTestRserve2" && date < "2017-09-22") {
@@ -112,7 +114,8 @@ parseLogData <- function(data, exclusionEmails, date){
   data <- data.table(data)
   # for successful server requests from emails not associated
   # with an ImmuneSpace administrator or "non-real" user
-  data <- data[ !X12 %in% exclusionEmails & X6 == 200 ]
+  data <- data[ !X12 %in% exclusionEmails &
+                X6 == 200 ]
   data <- data[ , c("date",
                     "study",
                     "schema",

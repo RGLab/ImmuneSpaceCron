@@ -4,7 +4,7 @@ r: bioc-release
 os: osx
 
 script:
-  - travis_wait 15 ./.pkg-build.sh
+  - travis_wait 30 ./.pkg-build.sh
 
 notifications:
   email: false

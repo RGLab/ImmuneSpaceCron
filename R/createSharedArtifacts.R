@@ -3,7 +3,7 @@
 #' @import data.table
 #' @export
 #'
-createImmuneSpaceRInitsArtifact <- function(subdir){
+createSharedArtifacts <- function(subdir){
   requireLibs(c("data.table"))
 
   if(!exists("logs_dt")){

@@ -1,6 +1,7 @@
 #' Create ImmuneSpaceR Inits artifact for use in multiple modules
 #'
 #' @import data.table
+#' @param subdir sub-directory
 #' @export
 #'
 createSharedArtifacts <- function(subdir){

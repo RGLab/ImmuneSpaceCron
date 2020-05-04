@@ -7,6 +7,9 @@ publications related to ImmuneSpace}
 \usage{
 createPubMedArtifact(subdir)
 }
+\arguments{
+\item{subdir}{sub-directory}
+}
 \description{
 Create artifact from PubMed data for use in ResourcesPage and MonitorIS to describe
 publications related to ImmuneSpace

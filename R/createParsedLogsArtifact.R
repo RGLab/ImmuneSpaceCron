@@ -1,6 +1,7 @@
 #' Create artifact from tomcat server logs to use for downstream analysis
 #'
 #' @import data.table stringr Rlabkey readr
+#' @param subdir sub-directory
 #' @export
 #'
 createParsedLogsArtifact <- function(subdir){

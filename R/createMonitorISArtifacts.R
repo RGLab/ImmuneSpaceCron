@@ -1,6 +1,7 @@
 #' Create artifacts for MonitorIS module report using parsed logs
 #'
 #' @import data.table stringr
+#' @param subdir sub-directory
 #' @export
 #'
 createMonitorISArtifacts <- function(subdir){

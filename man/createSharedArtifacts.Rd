@@ -6,6 +6,9 @@
 \usage{
 createSharedArtifacts(subdir)
 }
+\arguments{
+\item{subdir}{sub-directory}
+}
 \description{
 Create ImmuneSpaceR Inits artifact for use in multiple modules
 }

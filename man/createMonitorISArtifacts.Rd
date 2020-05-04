@@ -6,6 +6,9 @@
 \usage{
 createMonitorISArtifacts(subdir)
 }
+\arguments{
+\item{subdir}{sub-directory}
+}
 \description{
 Create artifacts for MonitorIS module report using parsed logs
 }

@@ -6,6 +6,9 @@
 \usage{
 createAllArtifacts(subdir = "/share/files/Studies/R_API_resources/")
 }
+\arguments{
+\item{subdir}{sub-directory}
+}
 \description{
 Create all artifacts for use in multiple modules
 }

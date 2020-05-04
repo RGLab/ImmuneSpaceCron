@@ -2,6 +2,7 @@
 #' publications related to ImmuneSpace
 #'
 #' @import data.table Rlabkey
+#' @param subdir sub-directory
 #' @export
 #'
 createPubMedArtifact <- function(subdir){

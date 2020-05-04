@@ -5,7 +5,6 @@
 #' @export
 #'
 createSharedArtifacts <- function(subdir){
-  requireLibs(c("data.table"))
 
   if(!exists("logs_dt")){
     logs_dt <- getCurrentRDS(subdir, "_logs.rds")

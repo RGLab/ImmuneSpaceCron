@@ -6,11 +6,6 @@
 #'
 createResourcesPageArtifacts <- function(subdir){
 
-  requireLibs(c("Rlabkey",
-                "data.table",
-                "stringr",
-                "rvest"))
-
   ######################################
   ###        General Setup           ###
   ######################################

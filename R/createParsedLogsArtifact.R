@@ -6,12 +6,6 @@
 #'
 createParsedLogsArtifact <- function(subdir){
 
-  requireLibs(c("Rlabkey",
-                "data.table",
-                "stringr",
-                "readr"))
-
-
   ######################################
   ###        General Setup           ###
   ######################################

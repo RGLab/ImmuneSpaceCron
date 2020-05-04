@@ -5,11 +5,6 @@
 #' @export
 #'
 createAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/"){
-  library(data.table)
-  library(stringr)
-  library(Rlabkey)
-  library(rvest)
-  library(readr)
 
   createParsedLogsArtifact(subdir)
   logs_dt <- getCurrentRDS(subdir, "_logs.rds")

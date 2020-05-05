@@ -14,5 +14,5 @@ test_that("daily log file parser returns expected output", {
   res <- ImmuneSpaceCronjobs:::parseLogData(unparsed, exclusionEmails, date)
   res <- ImmuneSpaceCronjobs:::createAccurateDateField(res)
   template <- readRDS("datasets/singleParsedLogFileOutput.rds")
-  expect_equivalent(res, template)
+  expect_true(all.equal(res, template, tolerance = .0001))
 })

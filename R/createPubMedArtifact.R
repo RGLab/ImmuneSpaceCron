@@ -1,7 +1,7 @@
 #' Create artifact from PubMed data for use in ResourcesPage and MonitorIS to describe
 #' publications related to ImmuneSpace
 #'
-#' @import data.table Rlabkey
+#' @import data.table Rlabkey rvest xml2 stringr
 #' @param subdir sub-directory
 #' @export
 #'
@@ -36,14 +36,14 @@ createPubMedArtifact <- function(subdir){
 getPubMedInfo <- function(pubMedIds){
   base <- "http://www.ncbi.nlm.nih.gov/pubmed?linkname=pubmed_pubmed_citedin&from_uid="
   results <- lapply(pubMedIds, function(id){
-    page <- read_html(paste0(base, id))
-    nodes <- html_nodes(page, css = '.rslt')
-    res <- lapply(nodes, html_text)
+    page <- xml2::read_html(paste0(base, id))
+    nodes <- rvest::html_nodes(page, css = '.rslt')
+    res <- lapply(nodes, rvest::html_text)
     parsed <- lapply(res, function(x){
       spl <- strsplit(x, "\\.")[[1]]
       if(length(spl) > 0){
-        title <- spl[[1]]
-        authors <- spl[[2]]
+        title <- stringr::str_trim(spl[[1]])
+        authors <- stringr::str_trim(spl[[2]])
         pubmedid <- spl[[length(spl)]]
         pubmedid <- regmatches(pubmedid, regexpr("\\d{8}", pubmedid))
       }else{
@@ -51,7 +51,7 @@ getPubMedInfo <- function(pubMedIds){
       }
       return(c(title, authors, pubmedid, id))
     })
-    parsed <- data.frame(do.call(rbind, parsed))
+    parsed <- data.table(do.call(rbind, parsed))
   })
   allIds <- data.table(do.call(rbind, results))
   cnames <- c("citedby_title",

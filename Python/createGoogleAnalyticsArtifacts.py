@@ -1,6 +1,8 @@
 """Hello Analytics Reporting API V3."""
 """Does not appear to work with V4 for authentication"""
+import sys
 import pandas as pd
+import numpy as np
 
 from apiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
@@ -52,52 +54,65 @@ def get_production_profile_id(service):
                     webPropertyId=property).execute()
 
             if profiles.get('items'):
-                # return the production profile
+                # return the production profile, which is actually "All Website" rather than
+                # PROD because PROD goes to 'http' version of site NOT https
                 names = []
                 items = profiles.get('items')
+      
                 for item in items: 
-                  names.append(item.get('name'))
-                prodIndex = names.index('PROD')
-                return profiles.get('items')[prodIndex].get('id')
+                  names.append(item.get('websiteUrl'))
+                
+                prodIndex = names.index('https://www.immunespace.org')
+                profileId = profiles.get('items')[prodIndex].get('id')
+             
+                return profileId
 
     return None
 
 
-def get_results(service, profile_id):
+def get_results(service, profile_id, startDay, endDay):
     # Use the Analytics Service Object to query the Core Reporting API
     # for the number of sessions within the past seven days.
 
     # Dimensions - Sources - ga:source, ga:fullReferrer, ga:country, ga:pagePath
     # Metrics (summarized by dimensions) - ga:users, ga:sessions, ga:bounces
-    
-
     return service.data().ga().get(
-            ids='ga:' + profile_id,
-            start_date='30daysAgo',
-            end_date='today',
-            dimensions='ga:source, ga:fullReferrer, ga:country, ga:landingPagePath, ga:secondPagePath',
-            metrics='ga:sessions, ga:bounces, ga:users').execute()
+            ids ='ga:' + profile_id,
+            start_date = startDay,
+            end_date = endDay,
+            dimensions ='ga:source, ga:fullReferrer, ga:country, ga:landingPagePath, ga:secondPagePath',
+            metrics ='ga:sessions, ga:bounces, ga:users').execute()
 
 
-def munge_results(results):
-    # # Print data nicely for the user.
-    # if results:
-    #     # print 'View (Profile):', results.get('profileInfo').get('profileName')
-    #     # print 'Total Sessions:', results.get('rows')[0][0]
-    #     print(results.get('rows'))
+def munge_results(results, startDay):
+    columns = ['source', 
+               'fullReferrer', 
+               'country', 
+               'landingPage', 
+               'secondPage', 
+               'sessions', 
+               'bounces', 
+               'users']
+                 
+    if results:
+      df = pd.DataFrame(results.get('rows'), columns = columns)
+      
+    else:
+      df = pd.DataFrame(np.nan, index = [0], columns = columns )
+    
+    df.assign(date = startDay)
+    return df
 
-    # else:
-    #     print 'No results found'
+def save_df(df, googleAnalyticsOutputDir, startDay):
+  df.to_csv(googleAnalyticsOutputDir + '/' + startDay + '_googleAnalyticsRawDailyData.csv')
 
-    # turn results.get('rows') into a data.frame with pandas to print out as a matrix
-    # strip the leading "u" from each element
-    df = pd.DataFrame(results.get('rows'), columns = ['source', 'fullReferrer', 'country', 'landingPage', 'secondPage', 'sessions', 'bounces', 'users'])
-    return(df)
-
-def save_df(df):
-  df.to_csv('~/Documents/FHCRC/ImmuneSpaceCronjobs/Python/test.csv')
 
 def main():
+    # args
+    googleAnalyticsOutputDir = sys.argv[1]
+    startDay = sys.argv[2]
+    endDay = sys.argv[3]
+    
     # Define the auth scopes to request.
     scope = ['https://www.googleapis.com/auth/analytics.readonly']
     key_file_location = '/home/evanhenrich/Documents/FHCRC/tmp_work/ISmonitor-5c21f4187a27.json'
@@ -110,8 +125,9 @@ def main():
             key_file_location=key_file_location)
 
     profile_id = get_production_profile_id(service)
-    df = munge_results(get_results(service, profile_id))
-    save_df(df)
+    raw = get_results(service, profile_id, startDay, endDay)
+    df = munge_results(raw, startDay)
+    save_df(df, googleAnalyticsOutputDir, startDay)
 
 
 if __name__ == '__main__':

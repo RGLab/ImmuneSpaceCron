@@ -77,7 +77,9 @@ mungeGoogleAnalyticsData <- function(dailyResults){
   adminSourceTerms <- c("localhost",
                         "github.com/RGLab/immport/",
                         "labkey.org/HIPC/Support%20Tickets",
-                        "labkey.org/home/Developer")
+                        "labkey.org/home/Developer",
+                        "3\\.218\\.206\\.229",
+                        "analytics\\.google\\.com/analytics")
   adminSources <- paste(adminSourceTerms, collapse = "|")
   dailyResults <- dailyResults[ !grepl(adminSources, fullReferrer)]
 

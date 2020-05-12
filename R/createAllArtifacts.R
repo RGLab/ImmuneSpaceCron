@@ -13,4 +13,5 @@ createAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/")
   createPubMedArtifact(subdir)
   createResourcesPageArtifacts(subdir)
   createMonitorISArtifacts(subdir)
+  createGoogleAnalyticsArtifacts(subdir)
 }

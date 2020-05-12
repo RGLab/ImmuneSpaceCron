@@ -100,7 +100,8 @@ def munge_results(results, startDay):
     else:
       df = pd.DataFrame(np.nan, index = [0], columns = columns )
     
-    df.assign(date = startDay)
+    df['date'] = startDay
+    
     return df
 
 def save_df(df, googleAnalyticsOutputDir, startDay):

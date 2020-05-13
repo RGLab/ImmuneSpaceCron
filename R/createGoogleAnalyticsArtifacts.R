@@ -21,12 +21,12 @@ createGoogleAnalyticsArtifacts <- function(subdir){
     rawResults <- lapply(file.path(googleAnalyticsOutputDir, currentFiles), fread)
     rawResultsDF <- rbindlist(rawResults)
 
-    mostRecentDay <- max(rawResultsDF$date)
+    nextDateNeeded <- as.Date(max(rawResultsDF$date)) + 1
   }else{
-    mostRecentDay <- "2016-01-01" # Public launch of www.immunespace.org
+    nextDateNeeded <- as.Date("2016-01-01") # Public launch of www.immunespace.org
   }
 
-  dates <- seq.Date(from = as.Date(mostRecentDay), to = Sys.Date(), by = "day")
+  dates <- seq.Date(from = nextDateNeeded, to = Sys.Date(), by = "day")
 
   startEndDates <- data.frame(start = dates[1: length(dates) - 1],
                               end = dates[2: length(dates)],
@@ -43,7 +43,7 @@ createGoogleAnalyticsArtifacts <- function(subdir){
 
   allResults <- rbindlist(res)
 
-  if(exists("rawResultsDF")){
+  if (exists("rawResultsDF")) {
     allResults <- rbind(rawResultsDF, allResults)
   }
 
@@ -63,15 +63,15 @@ getDailyGoogleAnalyticsResults <- function(startDay, endDay, pathToScript, googl
   dailyResults <- fread(dailyResultsPath)
 }
 
-mungeGoogleAnalyticsData <- function(dailyResults){
+mungeGoogleAnalyticsData <- function(allResults){
 
   # rm likely admin results
   adminPageTerms <- c("admin",
                       "pipeline",
                       "integration",
-                       "queryName")
+                      "queryName")
   adminPages <- paste(adminPageTerms, collapse = "|")
-  dailyResults <- dailyResults[ !grepl(adminPages, landingPage) & !grepl(adminPages, secondPage) ]
+  allResults <- allResults[ !grepl(adminPages, landingPage) & !grepl(adminPages, secondPage) ]
 
   # rm likely admins by looking at source
   adminSourceTerms <- c("localhost",
@@ -81,12 +81,13 @@ mungeGoogleAnalyticsData <- function(dailyResults){
                         "3\\.218\\.206\\.229",
                         "analytics\\.google\\.com/analytics")
   adminSources <- paste(adminSourceTerms, collapse = "|")
-  dailyResults <- dailyResults[ !grepl(adminSources, fullReferrer)]
+  allResults <- allResults[ !grepl(adminSources, fullReferrer) ]
 
-  # rm direct results that are NOT to the home page
-  dailyResults <- dailyResults[ !grepl("direct", fullReferrer) & !grepl("^/$", landingPage)]
+  # rm direct results that are NOT to the home page since they are not informative
+  allResults <- allResults[ !grepl("direct", fullReferrer) & !grepl("^/$", landingPage)]
 
   # summarize users by source as "sessions" as these could actually be same user
-  summarizedResults <- dailyResults[ , list(usageSessions = sum(users)),
+  summarizedResults <- allResults[ , list(usageSessions = sum(users),
+                                            bounces = sum(bounces)),
                                        by = c("source", "fullReferrer", "date")]
 }

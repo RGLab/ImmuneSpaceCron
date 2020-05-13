@@ -19,32 +19,38 @@ createGoogleAnalyticsArtifacts <- function(subdir){
   currentFiles <- list.files(googleAnalyticsOutputDir)
   if(length(currentFiles) > 0){
     rawResults <- lapply(file.path(googleAnalyticsOutputDir, currentFiles), fread)
-    rawResultsDF <- rbindlist(rawResults)
+    rawResultsDF <- rbindlist(rawResults, fill = TRUE) # handle empty values
+    rawResultsDF <- rawResultsDF[ !is.na(rawResultsDF$date) ]
 
     nextDateNeeded <- as.Date(max(rawResultsDF$date)) + 1
   }else{
     nextDateNeeded <- as.Date("2016-01-01") # Public launch of www.immunespace.org
   }
 
-  dates <- seq.Date(from = nextDateNeeded, to = Sys.Date(), by = "day")
+  # nextDateNeeded == NA when being re-run on same day
+  if (nextDateNeeded != Sys.Date()) {
+    dates <- seq.Date(from = nextDateNeeded, to = Sys.Date(), by = "day")
 
-  startEndDates <- data.frame(start = dates[1: length(dates) - 1],
-                              end = dates[2: length(dates)],
-                              stringsAsFactors = FALSE)
+    startEndDates <- data.frame(start = dates[1: length(dates) - 1],
+                                end = dates[2: length(dates)],
+                                stringsAsFactors = FALSE)
 
-  res <- apply(startEndDates, 1, function(x){
-    print(x[[1]])
-    ret <- ImmuneSpaceCronjobs:::getDailyGoogleAnalyticsResults(
-      startDay = x[[1]],
-      endDay = x[[2]],
-      pathToScript = pathToScript,
-      googleAnalyticsOutputDir = googleAnalyticsOutputDir)
-  })
+    res <- apply(startEndDates, 1, function(x){
+      ret <- ImmuneSpaceCronjobs:::getDailyGoogleAnalyticsResults(
+        startDay = x[[1]],
+        endDay = x[[2]],
+        pathToScript = pathToScript,
+        googleAnalyticsOutputDir = googleAnalyticsOutputDir)
+    })
 
-  allResults <- rbindlist(res)
+    allResults <- rbindlist(res)
 
-  if (exists("rawResultsDF")) {
-    allResults <- rbind(rawResultsDF, allResults)
+    if (exists("rawResultsDF")) {
+      allResults <- rbind(rawResultsDF, allResults)
+    }
+
+  }else{
+    allResults <- rawResultsDF
   }
 
   allResults <- ImmuneSpaceCronjobs:::mungeGoogleAnalyticsData(allResults)

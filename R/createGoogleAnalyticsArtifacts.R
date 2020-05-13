@@ -88,6 +88,6 @@ mungeGoogleAnalyticsData <- function(allResults){
 
   # summarize users by source as "sessions" as these could actually be same user
   summarizedResults <- allResults[ , list(usageSessions = sum(users),
-                                            bounces = sum(bounces)),
+                                          bounces = sum(bounces)),
                                        by = c("source", "fullReferrer", "date")]
 }

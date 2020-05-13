@@ -113,10 +113,11 @@ def main():
     googleAnalyticsOutputDir = sys.argv[1]
     startDay = sys.argv[2]
     endDay = sys.argv[3]
+    keyFile = sys.argv[4]
     
     # Define the auth scopes to request.
     scope = ['https://www.googleapis.com/auth/analytics.readonly']
-    key_file_location = '/home/evanhenrich/Documents/FHCRC/tmp_work/ISmonitor-5c21f4187a27.json'
+    key_file_location = keyFile
 
     # Authenticate and construct service.
     service = get_service(

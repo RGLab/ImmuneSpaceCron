@@ -8,6 +8,12 @@
 #'
 createGoogleAnalyticsArtifacts <- function(subdir){
 
+  googleAnalyticsKeyFile <- Sys.getenv('GOOGLE_ANALYTICS_KEY_FILE')
+
+  if(nchar(googleAnalyticsKeyFile) == 0){
+    stop("No google analytics key file found. Put in .Renviron.")
+  }
+
   pathToScript <- file.path(system.file(package = "ImmuneSpaceCronjobs"),
                             "createGoogleAnalyticsArtifacts.py")
 
@@ -40,7 +46,8 @@ createGoogleAnalyticsArtifacts <- function(subdir){
         startDay = x[[1]],
         endDay = x[[2]],
         pathToScript = pathToScript,
-        googleAnalyticsOutputDir = googleAnalyticsOutputDir)
+        googleAnalyticsOutputDir = googleAnalyticsOutputDir,
+        keyFile = googleAnalyticsKeyFile)
     })
 
     allResults <- rbindlist(res)
@@ -58,8 +65,13 @@ createGoogleAnalyticsArtifacts <- function(subdir){
   saveRDS(allResults, file.path(subdir, "googleAnalyticsArtifact.rds"))
 }
 
-getDailyGoogleAnalyticsResults <- function(startDay, endDay, pathToScript, googleAnalyticsOutputDir){
-  cmd <- paste("python", pathToScript, googleAnalyticsOutputDir, startDay, endDay)
+getDailyGoogleAnalyticsResults <- function(startDay, endDay, pathToScript,
+                                           googleAnalyticsOutputDir, keyFile){
+  cmd <- paste("python", pathToScript,
+               googleAnalyticsOutputDir,
+               startDay,
+               endDay,
+               keyFile)
   system(cmd, wait = TRUE)
 
   dailyResultsPath <- paste0(googleAnalyticsOutputDir,

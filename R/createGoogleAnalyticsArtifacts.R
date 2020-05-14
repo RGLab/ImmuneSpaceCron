@@ -61,8 +61,7 @@ createGoogleAnalyticsArtifacts <- function(subdir){
   }
 
   allResults <- ImmuneSpaceCronjobs:::mungeGoogleAnalyticsData(allResults)
-
-  saveRDS(allResults, file.path(subdir, "googleAnalyticsArtifact.rds"))
+  saveAndCleanUp(allResults, subdir, "googleAnalyticsArtifact")
 }
 
 getDailyGoogleAnalyticsResults <- function(startDay, endDay, pathToScript,

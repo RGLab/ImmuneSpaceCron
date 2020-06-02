@@ -26,6 +26,7 @@ createPubMedArtifact <- function(subdir){
                                 queryName = "Studies",
                                 colNameOpt = "fieldname")
   sdyPubMedData <- sdyPubMedData[ sdyPubMedData$study_accession %in% sdysInIS$name, ]
+  sdyPubMedData <- sdyPubMedData[ grepl("^\\d{8}$", sdyPubMedData$pubmed_id), ]
 
   allIds <- getPubMedInfo(sdyPubMedData$pubmed_id)
   allIds <- mungePubMedData(allIds, sdyPubMedData)

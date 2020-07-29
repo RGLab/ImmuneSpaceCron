@@ -26,6 +26,7 @@ createPubMedArtifact <- function(subdir){
                                 queryName = "Studies",
                                 colNameOpt = "fieldname")
   sdyPubMedData <- sdyPubMedData[ sdyPubMedData$study_accession %in% sdysInIS$name, ]
+  sdyPubMedData <- sdyPubMedData[ grepl("^\\d{8}$", sdyPubMedData$pubmed_id), ]
 
   allIds <- getPubMedInfo(sdyPubMedData$pubmed_id)
   allIds <- mungePubMedData(allIds, sdyPubMedData)
@@ -37,15 +38,15 @@ getPubMedInfo <- function(pubMedIds){
   base <- "http://www.ncbi.nlm.nih.gov/pubmed?linkname=pubmed_pubmed_citedin&from_uid="
   results <- lapply(pubMedIds, function(id){
     page <- xml2::read_html(paste0(base, id))
-    nodes <- rvest::html_nodes(page, css = '.rslt')
+    nodes <- rvest::html_nodes(page, css = '.docsum-content')
     res <- lapply(nodes, rvest::html_text)
     parsed <- lapply(res, function(x){
-      spl <- strsplit(x, "\\.")[[1]]
+      x <- stringr::str_trim(x)
+      spl <- strsplit(x, "\\.|\\?")[[1]]
       if(length(spl) > 0){
         title <- stringr::str_trim(spl[[1]])
         authors <- stringr::str_trim(spl[[2]])
-        pubmedid <- spl[[length(spl)]]
-        pubmedid <- regmatches(pubmedid, regexpr("\\d{8}", pubmedid))
+        pubmedid <- gsub(".*PMID: (\\d{8}).*", "\\1", x)
       }else{
         title <- authors <- pubmedid <- NA
       }

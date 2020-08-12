@@ -40,8 +40,8 @@ createMonitorISArtifacts <- function(subdir){
 
 # ----------------------------------------------------------------------
 parseLogs.study <- function(logs.study){
-  logs.study <- logs.study[ , list(count = .N), by = study]
-  setorder(logs.study, -count)
+  logs.study <- logs.study[ , list(count = .N), by = c("study", "date2")]
+  setorder(logs.study, date2)
   return(logs.study)
 }
 

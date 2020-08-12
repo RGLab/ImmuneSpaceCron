@@ -49,8 +49,8 @@ parseLogs.study <- function(logs.study){
 parseLogs.modules <- function(logs, searchString){
   logs.modules <- logs[, module := stringr::str_extract(X5, searchString)]
   logs.modules <- logs.modules[ !is.na(module) ]
-  logs.modules <- logs.modules[ , list(count = .N), by = module]
-  setorder(logs.modules, -count)
+  logs.modules <- logs.modules[ , list(count = .N), by = c("module", "date2")]
+  setorder(logs.modules, date2)
   return(logs.modules)
 }
 
@@ -61,8 +61,8 @@ parseLogs.reports <- function(logs, searchString){
   logs.reports$report <- sapply(logs.reports$report, function(x){
     return(regmatches(x, regexpr("SDY\\d{3}|IS\\d{1}", x)))
   })
-  logs.reports <- logs.reports[ , list(count = .N), by = report]
-  setorder(logs.reports, -count)
+  logs.reports <- logs.reports[ , list(count = .N), by = c("report","date2")]
+  setorder(logs.reports, date2)
   return(logs.reports)
 }
 

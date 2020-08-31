@@ -35,7 +35,8 @@ createPubMedArtifact <- function(subdir){
 }
 
 getPubMedInfo <- function(pubMedIds){
-  base <- "http://www.ncbi.nlm.nih.gov/pubmed?linkname=pubmed_pubmed_citedin&from_uid="
+  # Allow 200 citations at a time
+  base <- "https://pubmed.ncbi.nlm.nih.gov/?size=200&linkname=pubmed_pubmed_citedin&from_uid="
   results <- lapply(pubMedIds, function(id){
     page <- xml2::read_html(paste0(base, id))
     nodes <- rvest::html_nodes(page, css = '.docsum-content')

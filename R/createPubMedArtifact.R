@@ -35,13 +35,30 @@ createPubMedArtifact <- function(subdir){
 }
 
 getPubMedInfo <- function(pubMedIds){
-  # Allow 200 citations at a time
   base <- "https://pubmed.ncbi.nlm.nih.gov/?size=200&linkname=pubmed_pubmed_citedin&from_uid="
-  results <- lapply(pubMedIds, function(id){
-    page <- xml2::read_html(paste0(base, id))
+
+  getParsedResults <- function(id, pageNumber){
+    page <- xml2::read_html(paste0(base, id, "&page=", pageNumber))
     nodes <- rvest::html_nodes(page, css = '.docsum-content')
     res <- lapply(nodes, rvest::html_text)
-    parsed <- lapply(res, function(x){
+  }
+
+  # PubMed has limit of 200 citations per 'page' per id
+  # but some ids have more citations
+  results <- lapply(pubMedIds, function(id){
+    resHolder <- list()
+    valid <- TRUE
+    pageNumber <- 1
+    while(valid & pageNumber < 10){
+      newRes <- getParsedResults(id, pageNumber)
+      if(length(newRes) > 0){
+        resHolder <- c(resHolder, newRes)
+        pageNumber <- pageNumber + 1
+      }else{
+        valid <- FALSE
+      }
+    }
+    parsed <- lapply(resHolder, function(x){
       x <- stringr::str_trim(x)
       spl <- strsplit(x, "\\.|\\?")[[1]]
       if(length(spl) > 0){

@@ -104,4 +104,5 @@ mungePubMedData <- function(allIds, sdyPubMedData){
                 "studyNum",
                 "datePublished")
   tmp <- tmp[, colnames(tmp) %in% keepCols ]
+  tmp <- data.table(tmp)
 }

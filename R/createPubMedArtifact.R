@@ -28,20 +28,46 @@ createPubMedArtifact <- function(subdir){
   sdyPubMedData <- sdyPubMedData[ sdyPubMedData$study_accession %in% sdysInIS$name, ]
   sdyPubMedData <- sdyPubMedData[ grepl("^\\d{8}$", sdyPubMedData$pubmed_id), ]
 
-  allIds <- getPubMedInfo(sdyPubMedData$pubmed_id)
+  pubMedIds <- unique(sdyPubMedData$pubmed_id)
+  allIds <- getPubMedInfo(pubMedIds)
   allIds <- mungePubMedData(allIds, sdyPubMedData)
 
   saveAndCleanUp(allIds, subdir, filename = "pubmedInfo")
 }
 
 getPubMedInfo <- function(pubMedIds){
-  # Allow 200 citations at a time
   base <- "https://pubmed.ncbi.nlm.nih.gov/?size=200&linkname=pubmed_pubmed_citedin&from_uid="
-  results <- lapply(pubMedIds, function(id){
-    page <- xml2::read_html(paste0(base, id))
+
+  # Must ensure connection closes otherwise http 500 error seems to occur, potentially
+  # due to a block on number of connections per IP? (best guess)
+  getParsedResults <- function(id, pageNumber){
+    url <- paste0(base, id, "&page=", pageNumber)
+    page <- xml2::read_html(url)
     nodes <- rvest::html_nodes(page, css = '.docsum-content')
     res <- lapply(nodes, rvest::html_text)
-    parsed <- lapply(res, function(x){
+    closeAllConnections()
+    gc()
+    return(res)
+  }
+
+  # PubMed has limit of 200 citations per 'page' per id
+  # but some ids have more citations
+  results <- lapply(pubMedIds, function(id){
+    resHolder <- list()
+    valid <- TRUE
+    pageNumber <- 1
+
+    while(valid & pageNumber < 10){
+      newRes <- getParsedResults(id, pageNumber)
+      if(length(newRes) > 0){
+        resHolder <- c(resHolder, newRes)
+        pageNumber <- pageNumber + 1
+      }else{
+        valid <- FALSE
+      }
+    }
+
+    parsed <- lapply(resHolder, function(x){
       x <- stringr::str_trim(x)
       spl <- strsplit(x, "\\.|\\?")[[1]]
       if(length(spl) > 0){
@@ -65,13 +91,18 @@ getPubMedInfo <- function(pubMedIds){
 }
 
 mungePubMedData <- function(allIds, sdyPubMedData){
-  allIds$study <- sdyPubMedData$study_accession[ match(allIds$original_id, sdyPubMedData$pubmed_id) ]
-  allIds$studyNum <- as.numeric(gsub("SDY","", allIds$study))
-
-  # Add date published (as YYYY-MM for sorting)
-  sdyPubMedData$datePublished <- paste(sdyPubMedData$year, match(sdyPubMedData$month, month.abb), sep = "-")
-  allIds$datePublished <- sdyPubMedData$datePublished[ match(allIds$study, sdyPubMedData$study_accession) ]
-
-  allIds$original_title <- sdyPubMedData$title[ match(allIds$original_id, sdyPubMedData$pubmed_id) ]
-  return(allIds)
+  tmp <- merge(sdyPubMedData, allIds, by.x = "pubmed_id", by.y = "original_id", all.y = TRUE)
+  setnames(tmp, c("study_accession", "title", "pubmed_id"), c("study", "original_title", "original_id"))
+  tmp$studyNum <- as.numeric(gsub("SDY","", tmp$study))
+  tmp$datePublished <- paste(tmp$year, tmp$month, sep = "-")
+  keepCols <- c("citedby_title",
+                "citedby_authors",
+                "citedby_id",
+                "original_id",
+                "original_title",
+                "study",
+                "studyNum",
+                "datePublished")
+  tmp <- tmp[, colnames(tmp) %in% keepCols ]
+  tmp <- data.table(tmp)
 }

@@ -10,7 +10,8 @@ createAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/")
   logs_dt <- getCurrentRDS(subdir, "_logs.rds")
 
   createSharedArtifacts(subdir)
-  createPubMedArtifact(subdir)
+  # Pubmed occasionally fails when site is unavailable
+  dmp <- tryCatch({createPubMedArtifact(subdir)}, error = function(e){ return(e) })
   createResourcesPageArtifacts(subdir)
   createMonitorISArtifacts(subdir)
   createGoogleAnalyticsArtifacts(subdir)

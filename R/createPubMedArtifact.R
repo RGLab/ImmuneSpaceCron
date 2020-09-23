@@ -53,7 +53,6 @@ getPubMedInfo <- function(pubMedIds){
   # PubMed has limit of 200 citations per 'page' per id
   # but some ids have more citations
   results <- lapply(pubMedIds, function(id){
-    print(id)
     resHolder <- list()
     valid <- TRUE
     pageNumber <- 1

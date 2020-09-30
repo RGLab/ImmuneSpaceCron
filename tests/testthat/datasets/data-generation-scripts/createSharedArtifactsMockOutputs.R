@@ -1,3 +1,4 @@
+library(ImmuneSpaceCronjobs) # load searchStrings
 logs <- readRDS("tests/testthat/datasets/parsedLogFileOutput.rds")
 
 res <- ImmuneSpaceCronjobs:::parseLogsToISRinits(logs)

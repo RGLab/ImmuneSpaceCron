@@ -12,10 +12,10 @@ test_that("makeStudyStats", {
   expectedCols <- c("Date", "study", "studyId", "ISR_connections", "UI_pageviews", "total_views")
   expect_equivalent(colnames(res), expectedCols)
   types <- unname(sapply(res, typeof))
-  expectedTypes <- c("double", "character", "double", "double", "integer", "double")
+  expectedTypes <- c("double", "character", "double", "double", "double", "double")
   expect_equivalent(types, expectedTypes)
   expect_true(all(grepl("SDY\\d{2,4}", res$study)))
-  expect_true(nrow(res) == 8)
+  expect_true(nrow(res) == 21)
 })
 
 test_that("mungePIData", {

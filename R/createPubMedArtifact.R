@@ -1,7 +1,7 @@
 #' Create artifact from PubMed data for use in ResourcesPage and MonitorIS to describe
 #' publications related to ImmuneSpace
 #'
-#' @import data.table Rlabkey rvest xml2 stringr
+#' @import data.table Rlabkey xml2 stringr
 #' @param subdir sub-directory
 #' @export
 #'
@@ -35,6 +35,7 @@ createPubMedArtifact <- function(subdir){
   saveAndCleanUp(allIds, subdir, filename = "pubmedInfo")
 }
 
+#' @importFrom rvest html_nodes html_text
 getPubMedInfo <- function(pubMedIds){
   base <- "https://pubmed.ncbi.nlm.nih.gov/?size=200&linkname=pubmed_pubmed_citedin&from_uid="
 

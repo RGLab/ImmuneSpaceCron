@@ -1,6 +1,6 @@
 #' Create all artifacts for use in multiple modules
 #'
-#' @import data.table stringr Rlabkey rvest readr
+#' @import data.table stringr Rlabkey readr
 #' @param subdir sub-directory
 #' @export
 #'

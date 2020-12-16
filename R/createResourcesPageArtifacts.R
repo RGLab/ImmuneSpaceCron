@@ -1,6 +1,6 @@
 #' Create artifact from tomcat server logs to use for downstream analysis
 #'
-#' @import data.table stringr Rlabkey rvest
+#' @import data.table stringr Rlabkey
 #' @param subdir sub-directory
 #' @export
 #'

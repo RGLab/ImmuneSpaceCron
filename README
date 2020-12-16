@@ -1,3 +1,0 @@
-The purpose of this package is to provide tools and functions to generate useful artifacts for modules, APIs, or reports in the ImmuneSpace web application and ensure that all code used to create these artifacts is version-controlled. Currently code is run by 'generateArtifacts_cronjob.R' on RServe machines.
-
-last updated: 05.01.2020

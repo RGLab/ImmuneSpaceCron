@@ -1,4 +1,4 @@
-Package: ImmuneSpaceCronjobs
+Package: ImmuneSpaceCron
 Type: Package
 Title: ImmuneSpace Cronjob Tools 
 Version: 0.1.0

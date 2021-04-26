@@ -1,8 +1,8 @@
-# ImmuneSpaceCronjobs
+# ImmuneSpaceCron
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/RGLab/ImmuneSpaceCronjobs/workflows/R-CMD-check/badge.svg)](https://github.com/RGLab/ImmuneSpaceCronjobs/actions)
-[![Codecov test coverage](https://codecov.io/gh/RGLab/ImmuneSpaceCronjobs/branch/master/graph/badge.svg)](https://codecov.io/gh/RGLab/ImmuneSpaceCronjobs?branch=master)
+[![R-CMD-check](https://github.com/RGLab/ImmuneSpaceCron/workflows/R-CMD-check/badge.svg)](https://github.com/RGLab/ImmuneSpaceCron/actions)
+[![Codecov test coverage](https://codecov.io/gh/RGLab/ImmuneSpaceCron/branch/main/graph/badge.svg)](https://codecov.io/gh/RGLab/ImmuneSpaceCron?branch=main)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
 <!-- badges: end -->
 

@@ -2,10 +2,11 @@
 #'
 #' @export
 #'
-getLabkeyBaseURL <- function(){
+getLabkeyBaseURL <- function() {
   labkey.url.base <- ifelse(Sys.info()["nodename"] == "ImmuneTestRserve2",
-                            "https://test.immunespace.org",
-                            "https://www.immunespace.org")
+    "https://test.immunespace.org",
+    "https://www.immunespace.org"
+  )
 }
 
 #' Save RDS object and clean up any previous versions
@@ -15,21 +16,21 @@ getLabkeyBaseURL <- function(){
 #' @param filename filename suffix to use for saving and cleaning up
 #' @export
 #'
-saveAndCleanUp <- function(data, subdir, filename){
+saveAndCleanUp <- function(data, subdir, filename) {
   cleanUp(subdir, filename)
   saveOutput(data, subdir, filename)
 }
 
 
-saveOutput <- function(data, subdir, filename){
+saveOutput <- function(data, subdir, filename) {
   saveRDS(data, file = paste0(subdir, Sys.Date(), "_", filename, ".rds"))
 }
 
 
-cleanUp <- function(subdir, filename){
+cleanUp <- function(subdir, filename) {
   allFiles <- list.files(subdir)
-  targetFiles <- allFiles[ grep(filename, allFiles) ]
-  if(length(targetFiles) > 0){
+  targetFiles <- allFiles[grep(filename, allFiles)]
+  if (length(targetFiles) > 0) {
     targetFiles <- file.path(subdir, targetFiles)
     ret <- sapply(targetFiles, file.remove)
   }
@@ -41,9 +42,9 @@ cleanUp <- function(subdir, filename){
 #' @param filename filename suffix to use for saving and cleaning up
 #' @export
 #'
-getCurrentRDS <- function(subdir, filename){
+getCurrentRDS <- function(subdir, filename) {
   allFiles <- list.files(subdir)
-  targetFiles <- allFiles[ grepl(filename, allFiles) ]
+  targetFiles <- allFiles[grepl(filename, allFiles)]
   mostRecentFile <- sort(targetFiles, decreasing = TRUE)[[1]]
   tmp <- readRDS(file.path(subdir, mostRecentFile))
 }
@@ -53,9 +54,9 @@ getCurrentRDS <- function(subdir, filename){
 #' @param libs libraries to load
 #' @export
 #'
-requireLibs <- function(libs){
-  libs <- libs[ !libs %in% .packages() ]
-  if(length(libs) > 0){
+requireLibs <- function(libs) {
+  libs <- libs[!libs %in% .packages()]
+  if (length(libs) > 0) {
     invisible(lapply(libs, library, character.only = TRUE))
   }
 }

@@ -1,6 +1,4 @@
 .Rproj.user
 .Rhistory
 .RData
-*.Rproj*
-.*.Rnb.cached
-.Rbuildignore
+.Ruserdata

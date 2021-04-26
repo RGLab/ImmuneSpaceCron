@@ -1,7 +1,8 @@
+library(ImmuneSpaceCron) # load searchStrings
 logs <- readRDS("tests/testthat/datasets/parsedLogFileOutput.rds")
 
-res <- ImmuneSpaceCronjobs:::parseLogsToISRinits(logs)
+res <- ImmuneSpaceCron:::parseLogsToISRinits(logs)
 saveRDS(res, file = "tests/testthat/datasets/parseLogsToISRInitsOutput.rds")
 
-res <- ImmuneSpaceCronjobs:::parseLogsToUIStudyViews(logs)
+res <- ImmuneSpaceCron:::parseLogsToUIStudyViews(logs)
 saveRDS(res, file = "tests/testthat/datasets/parseLogsToUIStudyViews.rds")

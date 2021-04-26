@@ -1,3 +1,3 @@
 library(testthat)
-library(ImmuneSpaceCronjobs)
-test_check("ImmuneSpaceCronjobs")
+library(ImmuneSpaceCron)
+test_check("ImmuneSpaceCron")

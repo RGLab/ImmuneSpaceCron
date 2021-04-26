@@ -2,15 +2,15 @@ library(readr)
 library(Rlabkey)
 library(data.table)
 
-exclusionEmails <- ImmuneSpaceCronjobs:::getExcludedEmailAddresses("https://test.immunespace.org")
+exclusionEmails <- ImmuneSpaceCron:::getExcludedEmailAddresses("https://test.immunespace.org")
 saveRDS(exclusionEmails, file = "tests/testthat/datasets/exclusionEmailsSample.rds")
 
-makeParsedLogArtifact <- function(path.input, exclusionEmails){
-  res <- suppressWarnings(ImmuneSpaceCronjobs:::readLogFile(path.input))
-  date <- gsub('.*(\\d{4}-\\d{2}-\\d{2}).*', "\\1", path.input)
+makeParsedLogArtifact <- function(path.input, exclusionEmails) {
+  res <- suppressWarnings(ImmuneSpaceCron:::readLogFile(path.input))
+  date <- gsub(".*(\\d{4}-\\d{2}-\\d{2}).*", "\\1", path.input)
   date <- as.POSIXct(date, format = "%Y-%m-%d")
-  res <- ImmuneSpaceCronjobs:::parseLogData(res, exclusionEmails, date)
-  res <- ImmuneSpaceCronjobs:::createAccurateDateField(res)
+  res <- ImmuneSpaceCron:::parseLogData(res, exclusionEmails, date)
+  res <- ImmuneSpaceCron:::createAccurateDateField(res)
 }
 
 # File Notes:

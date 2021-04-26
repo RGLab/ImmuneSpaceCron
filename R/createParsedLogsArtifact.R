@@ -4,7 +4,7 @@
 #' @param subdir sub-directory
 #' @export
 #'
-createParsedLogsArtifact <- function(subdir){
+createParsedLogsArtifact <- function(subdir) {
 
   ######################################
   ###        General Setup           ###
@@ -17,8 +17,9 @@ createParsedLogsArtifact <- function(subdir){
 
   # Set labkey.url.base given the hostname
   labkey.url.base <- ifelse(Sys.info()["nodename"] == "ImmuneTestRserve2",
-                            "https://test.immunespace.org",
-                            "https://www.immunespace.org")
+    "https://test.immunespace.org",
+    "https://www.immunespace.org"
+  )
 
   exclusionEmails <- getExcludedEmailAddresses(labkey.url.base)
 
@@ -46,7 +47,6 @@ createParsedLogsArtifact <- function(subdir){
 # This will sync logs to `/share/tomcat-logs/` every six hour.
 
 parseDailyLog <- function(date, exclusionEmails) {
-
   if (Sys.info()["nodename"] == "ImmuneTestRserve2" && date < "2017-09-22") {
     file_name <- paste0("/share/tomcat-logs/localhost_access_log..", date, ".txt")
     file_name_m <- paste0("/share/tomcat-logs/modified/localhost_access_log..", date, ".txt")
@@ -86,7 +86,6 @@ parseDailyLog <- function(date, exclusionEmails) {
         }
 
         tried <- parseLogData(tried, exclusionEmails, date)
-
       } else {
         NULL
       }
@@ -98,55 +97,66 @@ parseDailyLog <- function(date, exclusionEmails) {
   }
 }
 
-readLogFile <- function(fl){
+readLogFile <- function(fl) {
   tried <- try(
-    readr::read_log(file = fl,
-                    col_types = readr::cols(.default = readr::col_character()))
+    readr::read_log(
+      file = fl,
+      col_types = readr::cols(.default = readr::col_character())
+    )
   )
 }
 
-parseLogData <- function(data, exclusionEmails, date){
+parseLogData <- function(data, exclusionEmails, date) {
   data <- data.table(data)
   # for successful server requests from emails not associated
   # with an ImmuneSpace administrator or "non-real" user
-  data <- data[ !X12 %in% exclusionEmails &
-                X6 == 200 ]
-  data <- data[ , c("date",
-                    "study",
-                    "schema",
-                    "query") :=
-                  list(date,
-                       stringr::str_extract(X5, "SDY\\d+|IS\\d+|Lyoplate"),
-                       grepl("schemaName=study?", X5),
-                       stringr::str_extract(X5, "(?<=queryName=)\\w+"))
-                ]
+  data <- data[!X12 %in% exclusionEmails &
+    X6 == 200]
+  data <- data[, c(
+    "date",
+    "study",
+    "schema",
+    "query"
+  ) :=
+    list(
+      date,
+      stringr::str_extract(X5, "SDY\\d+|IS\\d+|Lyoplate"),
+      grepl("schemaName=study?", X5),
+      stringr::str_extract(X5, "(?<=queryName=)\\w+")
+    )]
 }
 
-getExcludedEmailAddresses <- function(labkey.url.base){
+getExcludedEmailAddresses <- function(labkey.url.base) {
   # Ensure admins or "not-real" users are excluded
-  usersToExclude <- labkey.selectRows(baseUrl = labkey.url.base,
-                                      folderPath = "/home",
-                                      schemaName = "core",
-                                      queryName = "SiteUsers",
-                                      viewName = "",
-                                      colFilter = makeFilter(c("Groups/Group$SName",
-                                                               "CONTAINS_ONE_OF",
-                                                               "Developers;Administrators;LabKey;excludeFromLogs")),
-                                      containerFilter = NULL)
+  usersToExclude <- labkey.selectRows(
+    baseUrl = labkey.url.base,
+    folderPath = "/home",
+    schemaName = "core",
+    queryName = "SiteUsers",
+    viewName = "",
+    colFilter = makeFilter(c(
+      "Groups/Group$SName",
+      "CONTAINS_ONE_OF",
+      "Developers;Administrators;LabKey;excludeFromLogs"
+    )),
+    containerFilter = NULL
+  )
 
   # Admin emails no longer in the DB
-  oldAdminEmails <- c("rsautera@fhcrc.org",
-                      "ldashevs@scharp.org")
+  oldAdminEmails <- c(
+    "rsautera@fhcrc.org",
+    "ldashevs@scharp.org"
+  )
 
   # Vectors of people to exclude from counts
   exclusionEmails <- c(usersToExclude$Email, oldAdminEmails)
 }
 
-createAccurateDateField <- function(logs){
+createAccurateDateField <- function(logs) {
   # Create date from X4 rather than log file name b/c log file name leaves many NAs
   # and visualizations require a date
   tmp <- logs$X4
   tmp <- regmatches(tmp, regexpr("\\d{2}/\\w{3}/\\d{4}", tmp))
-  logs$date2 <- as.POSIXct(tmp, format="%d/%b/%Y", tz="UTC")
+  logs$date2 <- as.POSIXct(tmp, format = "%d/%b/%Y", tz = "UTC")
   return(logs)
 }

@@ -1,23 +1,27 @@
-Package: ImmuneSpaceCronjobs
+Package: ImmuneSpaceCron
 Type: Package
 Title: ImmuneSpace Cronjob Tools 
 Version: 0.1.0
-Author: Evan Henrich
-Maintainer: Evan henrich <ehenrich@fredhutch.org>
+Authors@R:
+    person("ImmuneSpace Maintainer",
+           email = "immunespace@gmail.com",
+           role = c("cre", "cph"))
 Description: Provides version-controlled tools for parsing logs data and 
     generating artifacts that can be used in the private ImmuneSpace API as 
     well as for modules such as MonitorIS to improve speed.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests:
-    testthat
+    testthat,
+    covr
 Depends: 
     R (>= 2.10),
     data.table,
     Rlabkey,
     readr,
-    rvest,
     stringr,
     xml2
+Imports:
+    rvest

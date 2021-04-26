@@ -81,7 +81,7 @@ def get_results(service, profile_id, startDay, endDay):
             start_date = startDay,
             end_date = endDay,
             dimensions ='ga:source, ga:fullReferrer, ga:country, ga:landingPagePath, ga:secondPagePath',
-            metrics ='ga:sessions, ga:bounces, ga:users').execute()
+            metrics ='ga:sessions, ga:bounces, ga:users, ga:avgSessionDuration').execute()
 
 
 def munge_results(results, startDay):
@@ -92,7 +92,8 @@ def munge_results(results, startDay):
                'secondPage', 
                'sessions', 
                'bounces', 
-               'users']
+               'users',
+               'avgSessionDuration']
                  
     if results:
       df = pd.DataFrame(results.get('rows'), columns = columns)

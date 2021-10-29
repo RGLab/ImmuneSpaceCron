@@ -4,7 +4,7 @@
 #' @param subdir sub-directory
 #' @export
 #'
-createAllArtifacts <- function(subdir = "/share/files/Studies/R_API_resources/") {
+createAllArtifacts <- function(subdir = "/share/resources/") {
   createParsedLogsArtifact(subdir)
   logs_dt <- getCurrentRDS(subdir, "_logs.rds")
 

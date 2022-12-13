@@ -3,9 +3,10 @@
 #' @export
 #'
 getLabkeyBaseURL <- function() {
-  labkey.url.base <- ifelse(Sys.info()["nodename"] == "ImmuneTestRserve2",
-    "https://test.immunespace.org",
-    "https://www.immunespace.org"
+  labkey.url.base <- ifelse(
+    grepl("hcc-data-0", Sys.info()["nodename"][[1]]),
+    "https://datatools-dev.immunespace.org",
+    "https://datatools.immunespace.org"
   )
 }
 

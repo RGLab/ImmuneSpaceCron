@@ -31,7 +31,8 @@ createGoogleAnalyticsArtifacts <- function(subdir) {
 
     nextDateNeeded <- as.Date(max(rawResultsDF$date)) + 1
   } else {
-    nextDateNeeded <- as.Date("2016-01-01") # Public launch of www.immunespace.org
+    # Public launch of datatools.immunespace.org
+    nextDateNeeded <- as.Date("2016-01-01")
   }
 
   # nextDateNeeded == NA when being re-run on same day

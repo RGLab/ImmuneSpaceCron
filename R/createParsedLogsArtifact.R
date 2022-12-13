@@ -16,9 +16,10 @@ createParsedLogsArtifact <- function(subdir) {
   to <- as.POSIXct(Sys.Date(), format = format)
 
   # Set labkey.url.base given the hostname
-  labkey.url.base <- ifelse(Sys.info()["nodename"] == "ImmuneTestRserve2",
-    "https://test.immunespace.org",
-    "https://www.immunespace.org"
+  labkey.url.base <- ifelse(
+    grepl("hcc-data-0", Sys.info()["nodename"][[1]]),
+    "https://datatools-dev.immunespace.org",
+    "https://datatools.immunespace.org"
   )
 
   exclusionEmails <- getExcludedEmailAddresses(labkey.url.base)

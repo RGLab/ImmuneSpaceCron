@@ -62,7 +62,7 @@ def get_production_profile_id(service):
                 for item in items: 
                   names.append(item.get('websiteUrl'))
                 
-                prodIndex = names.index('https://www.immunespace.org')
+                prodIndex = names.index('https://datatools.immunespace.org')
                 profileId = profiles.get('items')[prodIndex].get('id')
              
                 return profileId

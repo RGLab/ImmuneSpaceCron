@@ -2,7 +2,7 @@ library(readr)
 library(Rlabkey)
 library(data.table)
 
-exclusionEmails <- ImmuneSpaceCron:::getExcludedEmailAddresses("https://test.immunespace.org")
+exclusionEmails <- ImmuneSpaceCron:::getExcludedEmailAddresses("https://datatools-dev.immunespace.org")
 saveRDS(exclusionEmails, file = "tests/testthat/datasets/exclusionEmailsSample.rds")
 
 makeParsedLogArtifact <- function(path.input, exclusionEmails) {

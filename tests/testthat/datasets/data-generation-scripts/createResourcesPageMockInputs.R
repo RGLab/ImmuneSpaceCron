@@ -1,5 +1,5 @@
 library(Rlabkey)
-labkey.url.base <- "https://test.immunespace.org"
+labkey.url.base <- "https://datatools-dev.immunespace.org"
 
 validStudies <- labkey.selectRows(
   baseUrl = labkey.url.base,
